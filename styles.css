@@ -1,7 +1,91 @@
-/* Set the size of the div element that contains the map */
+#body {
+	margin:0;
+	padding:0;
+}
+
+#title {
+	font-family: "Tillana", cursive;
+  font-size:45px;
+  width:1000px;
+  margin:40px auto 0 auto;
+}
+#title span {
+  font-weight:normal;
+  font-size:15px;
+}
 #map {
   height: 600px;
-  /* The height is 400 pixels */
   width: 1000px;
-  /* The width is the width of the web page */
+  margin: 10px auto 0 auto;
+}
+
+.slidecontainer {
+	font-family: "Tillana", cursive;
+	margin:20px auto 0 auto;
+  width: 40vw; /* Width of the outside container */
+}
+
+/* The slider itself */
+.slider {
+	width: 40vw; /* Full-width */
+	height: 15px; /* Specified height */
+	background: #d3d3d3; /* Grey background */
+	outline: none; /* Remove outline */
+	opacity: 0.8; /* Set transparency (for mouse-over effects on hover) */
+	-webkit-transition: .2s; /* 0.2 seconds transition on hover */
+	transition: opacity .2s;
+}
+
+/* Mouse-over effects */
+.slider:hover {
+	opacity: 1; /* Fully shown on mouse-over */
+}
+
+
+#lightbox {
+  position: fixed;
+  z-index: 1;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: #FFFFFF;
+}
+
+#innerlightbox {
+  background-color: white;
+  height: 400px;
+  width: 1400px;
+  text-align: center;
+
+  margin: 0;
+  position: absolute;
+  top: 70px;
+  left: 250px;
+}
+
+#LBArrow {
+	position:absolute;
+	width:400px;
+	top:0;
+	left:0;
+	transform:rotate(-100deg);
+}
+
+#innerlightbox h1 {
+  margin-top: 70px;
+  font-size: 75px;
+}
+
+#innerlightbox p {
+  font-size: 40px;
+}
+
+@media screen and (max-width: 437px) {
+  #map {
+    height:300px;
+    width:90vw;
+  }
 }
