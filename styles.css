@@ -1,17 +1,19 @@
 #body {
-	margin:0;
-	padding:0;
+  margin: 0;
+  padding: 0;
 }
 
 #title {
-	font-family: "Tillana", cursive;
-  font-size:45px;
-  width:1000px;
-  margin:40px auto 0 auto;
+  font-family: "Tillana", cursive;
+  font-size: 45px;
+  width: 1000px;
+  margin: 60px auto 0 auto;
+  line-height: 10px;
+
 }
 #title span {
-  font-weight:normal;
-  font-size:15px;
+  font-weight: normal;
+  font-size: 15px;
 }
 #map {
   height: 600px;
@@ -19,28 +21,30 @@
   margin: 10px auto 0 auto;
 }
 
-.slidecontainer {
-	font-family: "Tillana", cursive;
-	margin:20px auto 0 auto;
+.slidercontainer {
+  font-family: "Tillana", cursive;
+  margin: 20px auto 0 auto;
   width: 40vw; /* Width of the outside container */
+}
+.slidercontainer h2 {
+  margin:0;
 }
 
 /* The slider itself */
 .slider {
-	width: 40vw; /* Full-width */
-	height: 15px; /* Specified height */
-	background: #d3d3d3; /* Grey background */
-	outline: none; /* Remove outline */
-	opacity: 0.8; /* Set transparency (for mouse-over effects on hover) */
-	-webkit-transition: .2s; /* 0.2 seconds transition on hover */
-	transition: opacity .2s;
+  width: 40vw; /* Full-width */
+  height: 15px; /* Specified height */
+  background: #d3d3d3; /* Grey background */
+  outline: none; /* Remove outline */
+  opacity: 0.8; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: 0.2s; /* 0.2 seconds transition on hover */
+  transition: opacity 0.2s;
 }
 
 /* Mouse-over effects */
 .slider:hover {
-	opacity: 1; /* Fully shown on mouse-over */
+  opacity: 1; /* Fully shown on mouse-over */
 }
-
 
 #lightbox {
   position: fixed;
@@ -67,11 +71,11 @@
 }
 
 #LBArrow {
-	position:absolute;
-	width:400px;
-	top:0;
-	left:0;
-	transform:rotate(-100deg);
+  position: absolute;
+  width: 400px;
+  top: 0;
+  left: 0;
+  transform: rotate(-100deg);
 }
 
 #innerlightbox h1 {
@@ -84,8 +88,11 @@
 }
 
 @media screen and (max-width: 437px) {
+  #title {
+    width: 90vw;
+  }
   #map {
-    height:300px;
-    width:90vw;
+    height: 300px;
+    width: 90vw;
   }
 }
