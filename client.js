@@ -1,14 +1,21 @@
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js");
+}
+
 // Note: This example requires that you consent to location sharing when
 // prompted by your browser. If you see the error "The Geolocation service
 // failed.", it means you probably did not give permission for the browser to
 // locate you.
 let map, infoWindow;
 let currentLocation;
+let markersArray = [];
+let rad = 3000;
 
 function initMap() {
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(
 			(position) => {
+				document.getElementById("lightbox").style.display = "none";
 				let temp = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
 				let pos = {
 					lat: position.coords.latitude,
@@ -21,11 +28,11 @@ function initMap() {
 				});
 				map.setCenter(pos);
 				
-				const currentLocationMarker = new google.maps.Marker({
+				let currentLocationMarker = new google.maps.Marker({
 					position: pos,
 					map: map,
 				});
-			  
+				markersArray.push(currentLocationMarker);
 				currentLocation = pos;
 				infoWindow = new google.maps.InfoWindow();
 				const locationButton = document.createElement("button");
@@ -35,15 +42,9 @@ function initMap() {
 				locationButton.addEventListener("click", () => {
 					centerOnSelf();
 				});
+				document.getElementById("map").style.margin = "20px auto 0 auto";
 				
-				let request = {
-					location: map.getCenter(),
-					radius: '3000',
-					type: ['restaurant']
-				};
-
-				service = new google.maps.places.PlacesService(map);
-				service.nearbySearch(request, callback);
+				findNearbyPlaces();
 			},
 			() => {
 				handleLocationError(true, infoWindow, map.getCenter());
@@ -63,15 +64,24 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 }
 
 function centerOnSelf() {
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-			map.setCenter(currentLocation);
-        },
-        () => {
-          handleLocationError(true, infoWindow, map.getCenter());
-        }
-    );
+	map.setCenter(currentLocation);
+	let currentLocationMarker = new google.maps.Marker({
+		position: currentLocation,
+		map: map,
+	});
+	markersArray.push(currentLocationMarker);
 }//centerOnSelf
+
+function findNearbyPlaces() {
+	let request = {
+		location: map.getCenter(),
+		radius: rad,
+		type: ['restaurant']
+	};
+
+	service = new google.maps.places.PlacesService(map);
+	service.nearbySearch(request, callback);
+}
 
 function callback(results, status) {
   if (status == google.maps.places.PlacesServiceStatus.OK) {
@@ -93,4 +103,29 @@ function createMarker(place) {
     title: place.name,
 	icon: "images/yellowmarker.png",
   })
+  markersArray.push(marker);
+}
+
+function clearOverlays() {
+  for (let i = 0; i < markersArray.length; i++ ) {
+    markersArray[i].setMap(null);
+  }
+  markersArray.length = 0;
+}
+
+let slider = document.getElementById("myRange");
+let output = document.getElementById("distanceSliderSpan");
+output.innerHTML = slider.value; // Display the default slider value
+
+// Update the current slider value (each time you drag the slider handle)
+slider.oninput = function() {
+  output.innerHTML = this.value;
+  rad = this.value * 1000;
+  clearOverlays();
+  findNearbyPlaces();
+	let currentLocationMarker = new google.maps.Marker({
+		position: currentLocation,
+		map: map,
+	});
+	markersArray.push(currentLocationMarker);
 }
