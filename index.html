@@ -1,16 +1,35 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Add Map</title>
-
-    <link rel="stylesheet" type="text/css" href="styles.css" />
-    <script src="client.js"></script>
+    <title>LocateMe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+	  <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="/images/icons/icon-192x192.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+  	<link href="https://fonts.googleapis.com/css2?family=Tillana:wght@800&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="images/icons/icon-192x192.png" />
+    <meta name="theme-color" content="#FFFFFF"/>
   </head>
   <body>
-    <h3>My Google Maps Demo</h3>
-    <!--The div element for the map -->
+    <h1 id="title">LocateMe<span> - A Location App Built off of the Google Api</span></h1>
     <div id="map"></div>
-
+	
+	<div class="slidecontainer">
+		<h2>Searching Distance: <span id="distanceSliderSpan">3</span>km</h2>
+		<input type="range" min="1" max="20" value="3" class="slider" id="myRange">
+	</div>
+    
+    <div id="lightbox">
+      <div id="innerlightbox">
+          <img id="LBArrow" src="images/arrow.png">
+          <h1>Attention!</h1>
+          <p>This app requires location services enabled</p>
+      </div>
+    </div>
+    
+	<script src="client.js"></script>
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
      <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYJU8sLVmm5Ckli9g2Xp3T6s-9KSH0-_I&callback=initMap&libraries=places&v=weekly"
