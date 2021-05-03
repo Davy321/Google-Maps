@@ -12,45 +12,50 @@ let markersArray = [];
 let rad = 3000;
 
 function initMap() {
-	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(
-			(position) => {
-				document.getElementById("lightbox").style.display = "none";
-				let temp = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-				let pos = {
-					lat: position.coords.latitude,
-					lng: position.coords.longitude,
-				};
-				
-				map = new google.maps.Map(document.getElementById("map"), {
-					center: temp,
-					zoom: 13,
-				});
-				map.setCenter(pos);
-				
-				let currentLocationMarker = new google.maps.Marker({
-					position: pos,
-					map: map,
-				});
-				markersArray.push(currentLocationMarker);
-				currentLocation = pos;
-				infoWindow = new google.maps.InfoWindow();
-				const locationButton = document.createElement("button");
-				locationButton.textContent = "Pan to Current Location";
-				locationButton.classList.add("custom-map-control-button");
-				map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
-				locationButton.addEventListener("click", () => {
-					centerOnSelf();
-				});
-				document.getElementById("map").style.margin = "20px auto 0 auto";
-				
-				findNearbyPlaces();
-			},
-			() => {
-				handleLocationError(true, infoWindow, map.getCenter());
-			}
-		);
-    }
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        document.getElementById("lightbox").style.display = "none";
+        let temp = new google.maps.LatLng(
+          position.coords.latitude,
+          position.coords.longitude
+        );
+        let pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: temp,
+          zoom: 13
+        });
+        map.setCenter(pos);
+
+        let currentLocationMarker = new google.maps.Marker({
+          position: pos,
+          map: map
+        });
+        markersArray.push(currentLocationMarker);
+        currentLocation = pos;
+        infoWindow = new google.maps.InfoWindow();
+        const locationButton = document.createElement("button");
+        locationButton.textContent = "Pan to Current Location";
+        locationButton.classList.add("custom-map-control-button");
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(
+          locationButton
+        );
+        locationButton.addEventListener("click", () => {
+          centerOnSelf();
+        });
+        document.getElementById("map").style.margin = "20px auto 0 auto";
+
+        findNearbyPlaces();
+      },
+      () => {
+        handleLocationError(true, infoWindow, map.getCenter());
+      }
+    );
+  }
 }
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -64,36 +69,36 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 }
 
 function centerOnSelf() {
-	map.setCenter(currentLocation);
-	let currentLocationMarker = new google.maps.Marker({
-		position: currentLocation,
-		map: map,
-	});
-	markersArray.push(currentLocationMarker);
-}//centerOnSelf
+  map.setCenter(currentLocation);
+  let currentLocationMarker = new google.maps.Marker({
+    position: currentLocation,
+    map: map
+  });
+  markersArray.push(currentLocationMarker);
+} //centerOnSelf
 
 function findNearbyPlaces() {
-	let request = {
-		location: map.getCenter(),
-		radius: rad,
-		type: ['restaurant']
-	};
+  let request = {
+    location: map.getCenter(),
+    radius: rad,
+    type: ["restaurant"]
+  };
 
-	service = new google.maps.places.PlacesService(map);
-	service.nearbySearch(request, callback);
+  service = new google.maps.places.PlacesService(map);
+  service.nearbySearch(request, callback);
 }
 
 function callback(results, status) {
   if (status == google.maps.places.PlacesServiceStatus.OK) {
-		results.sort(function(a, b) {
-			return b.rating - a.rating;
-		});
-		
-		for (let j = 0; j < 3; j++) {
-			createMarker(results[j]);
-		}//for
-  }//if
-}//callback
+    results.sort(function(a, b) {
+      return b.rating - a.rating;
+    });
+
+    for (let j = 0; j < 3; j++) {
+      createMarker(results[j]);
+    } //for
+  } //if
+} //callback
 
 function createMarker(place) {
   let placeLoc = place.geometry.location;
@@ -101,13 +106,13 @@ function createMarker(place) {
     map: map,
     position: place.geometry.location,
     title: place.name,
-	icon: "images/yellowmarker.png",
-  })
+    icon: "images/yellowmarker.png"
+  });
   markersArray.push(marker);
 }
 
 function clearOverlays() {
-  for (let i = 0; i < markersArray.length; i++ ) {
+  for (let i = 0; i < markersArray.length; i++) {
     markersArray[i].setMap(null);
   }
   markersArray.length = 0;
@@ -123,9 +128,9 @@ slider.oninput = function() {
   rad = this.value * 1000;
   clearOverlays();
   findNearbyPlaces();
-	let currentLocationMarker = new google.maps.Marker({
-		position: currentLocation,
-		map: map,
-	});
-	markersArray.push(currentLocationMarker);
-}
+  let currentLocationMarker = new google.maps.Marker({
+    position: currentLocation,
+    map: map
+  });
+  markersArray.push(currentLocationMarker);
+};
