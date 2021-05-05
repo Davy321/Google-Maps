@@ -9,9 +9,17 @@ if ("serviceWorker" in navigator) {
 let map, infoWindow;
 let currentLocation;
 let markersArray = [];
+let placeArray = [];
+let infoWindowFood;
 let rad = 3000;
+let transportMethod;
+let tmp;
+
+let directionsService;
+let directionsRenderer;
 
 function initMap() {
+  infoWindowFood = new google.maps.InfoWindow();
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       position => {
@@ -29,6 +37,8 @@ function initMap() {
           center: temp,
           zoom: 13
         });
+        directionsService = new google.maps.DirectionsService();
+        directionsRenderer = new google.maps.DirectionsRenderer();
         map.setCenter(pos);
 
         let currentLocationMarker = new google.maps.Marker({
@@ -101,12 +111,29 @@ function callback(results, status) {
 } //callback
 
 function createMarker(place) {
-  let placeLoc = place.geometry.location;
+  placeArray.push(place);
   let marker = new google.maps.Marker({
     map: map,
     position: place.geometry.location,
     title: place.name,
     icon: "images/yellowmarker.png"
+  });
+
+  google.maps.event.addListener(marker, "click", () => {
+    let contentString =
+      "<h3>" + place.name + "</h3>" +
+      "Rating: <b>" + place.rating + " / 5 </b><p>" + place.vicinity + "</p>" +
+      '<button class="dButton" onclick="getDirections(\'' + place.name + '\')">Directions</button> ' + 
+      '<label for="transportMethod">Transport Method: </label>' +
+      '<select id="transportMethod" name="transportMethod" onchange="getTransportMethod();">' +
+      '<option value="DRIVING">Driving</option>' +
+      '<option value="BICYCLING">Biking</option>' +
+      '<option value="TRANSIT">Transit</option>' +
+      '<option value="WALKING">Walking</option>' +
+      '</select>';
+
+    infoWindowFood.setContent(contentString);
+    infoWindowFood.open(map, marker);
   });
   markersArray.push(marker);
 }
@@ -118,13 +145,15 @@ function clearOverlays() {
   markersArray.length = 0;
 }
 
-let slider = document.getElementById("myRange");
-let output = document.getElementById("distanceSliderSpan");
-output.innerHTML = slider.value; // Display the default slider value
+let DSlider = document.getElementById("myRange");
+let DSliderOutput = document.getElementById("distanceSliderSpan");
+DSliderOutput.innerHTML = DSlider.value; // Display the default slider value
 
 // Update the current slider value (each time you drag the slider handle)
-slider.oninput = function() {
-  output.innerHTML = this.value;
+DSlider.oninput = function() {
+  directionsRenderer.set('directions', null);
+  
+  DSliderOutput.innerHTML = this.value;
   rad = this.value * 1000;
   clearOverlays();
   findNearbyPlaces();
@@ -134,3 +163,37 @@ slider.oninput = function() {
   });
   markersArray.push(currentLocationMarker);
 };
+
+// Update the current slider value (each time you drag the slider handle)
+function getTransportMethod() {
+  let elem = document.getElementById("transportMethod");
+  transportMethod = elem.value;
+}//transportMethod
+
+function getDirections(name) {
+  
+  let place;
+  for (let i = 0; i < placeArray.length; i++) {
+    if (placeArray[i].name == name) {
+      place = placeArray[i];
+      break;
+    }
+  }
+  
+  directionsService.route(
+    {
+      origin: currentLocation,
+      destination: place.geometry.location,
+      travelMode: transportMethod,
+    },
+    (response, status) => {
+      if (status === "OK") {
+        infoWindowFood.close();
+        directionsRenderer.setDirections(response);
+        directionsRenderer.setMap(map);
+      } else {
+        window.alert("Directions request failed due to " + status);
+      }
+    }
+  );
+} // getDirections
